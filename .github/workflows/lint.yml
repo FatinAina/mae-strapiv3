@@ -1,0 +1,69 @@
+name: Code Scan
+env:
+    NODE_EXTRA_CA_CERTS: /Users/maybankidh2/githubcert/githubcert.pem
+on: [pull_request]
+
+jobs:
+    eslint:
+        name: ESLint of Changed Files
+        runs-on: MACMINI2
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 16
+
+            - name: Install dependencies
+              run: |
+                  npm i --legacy-peer-deps
+            - name: Run eslint on changed files
+              uses: tj-actions/eslint-changed-files@v16
+              with:
+                  config_path: "./.eslintrc.js"
+                  ignore_path: "./.eslintignore"
+                  extra_args: "--max-warnings=0"
+                  all_files: "true"
+                  file_extensions: |
+                      **/*.js
+                      **/*.jsx
+
+            - name: Generate Report
+              continue-on-error: true
+              if: always()
+              run: |
+                  npx eslint $(git diff --name-only origin/development | grep -E '\.(js|jsx)$' | xargs)  -f 'node_modules/eslint-html-reporter/reporter.js' > lint-report.html
+            - name: Archive code coverage results
+              if: always()
+              uses: actions/upload-artifact@v3
+              with:
+                  name: eslint-report
+                  path: lint-report.html
+
+    notify:
+        name: Telegram Message
+        needs: [eslint]
+        runs-on: MACMINI2
+        env:
+            TELEGRAM_TO: -1001570601870
+            TELEGRAM_TOKEN: 5655467331:AAEJC7GvT6BSIezxfMT8VWlaL0_0_fVE0y4 #open botfather app on telegram >  /start > /newbot
+            TELEGRAM_SILENT: false
+            MESSAGE: |
+                ${{ github.actor }} created a pull request:
+
+                Title: ${{ github.event.pull_request.title }}
+                Target branch: ${{ github.event.pull_request.base.ref }}
+
+                Req. Reviewers : ${{ join(github.event.pull_request.requested_reviewers.*.login, ', ') }}
+                Req. Review Teams: ${{ join(github.event.pull_request.requested_teams.*.name, ', ') }}
+
+                Assignee/s : ${{ join(github.event.pull_request.assignees.*.login, ', ') }}
+
+                See PR: ${{ github.server_url }}/${{ github.repository }}/pull/${{ github.event.pull_request.number }}
+        steps:
+            - uses: actions/checkout@v3
+            - name: Telegram Notify
+              run: >
+                  curl --data text="${{env.MESSAGE}}"
+                  --data chat_id=${{env.TELEGRAM_TO}}
+                  --data disable_notification=${{env.TELEGRAM_SILENT}}
+                  https://api.telegram.org/bot${{env.TELEGRAM_TOKEN}}/sendMessage

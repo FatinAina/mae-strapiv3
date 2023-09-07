@@ -1,0 +1,58 @@
+module.exports = {
+    env: {
+        browser: true,
+        es2021: true,
+    },
+    extends: [
+        "eslint:recommended",
+        "standard",
+        "plugin:sonarjs/recommended",
+        "plugin:react/recommended",
+    ],
+    overrides: [],
+    parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+    },
+    plugins: ["react", "react-native", "import", "no-unused-react-component-methods"],
+    rules: {
+        "no-trailing-spaces": 0,
+        "react/no-did-mount-set-state": 2,
+        "react/no-direct-mutation-state": 2,
+        "react/jsx-uses-vars": 2,
+        "react/no-unused-state": 1,
+        "react/prop-types": 2,
+        "react/jsx-no-bind": 0,
+        "react/jsx-no-duplicate-props": 2,
+        "react/jsx-curly-brace-presence": 1,
+        "react-native/no-unused-styles": 2,
+        "react-native/split-platform-components": 2,
+        "react-native/no-inline-styles": 2,
+        "react-native/no-color-literals": 2,
+        "import/order": [
+            "error",
+            {
+                groups: ["builtin", "external", "parent", "sibling", "index", "object", "type"],
+            },
+        ],
+        "no-unused-react-component-methods/no-unused-react-component-methods": 1,
+        quotes: 0,
+        semi: ["warn", "always"],
+        indent: "off",
+        "space-before-function-paren": "off",
+        "spaced-comment": "off",
+        "comma-dangle": 0,
+        "no-shadow": 0,
+        "no-undef": 2,
+        "no-duplicate-imports": 1,
+        "prefer-const": 1,
+        "object-shorthand": 1,
+        "lines-between-class-members": 0,
+        "multiline-ternary": 0,
+    },
+    settings: {
+        react: {
+            version: "detect",
+        },
+    },
+};

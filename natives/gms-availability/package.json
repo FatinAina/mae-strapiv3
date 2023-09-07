@@ -1,0 +1,26 @@
+{
+    "name": "gms-availability",
+    "version": "1.1.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/fsdev-studio/rn-google-api-availability"
+    },
+    "description": "Check google play services version",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "react-native",
+        "google",
+        "play",
+        "services",
+        "availability"
+    ],
+    "main": "RNGoogleAPIAvailability",
+    "author": "Thomas Dreyer",
+    "contributors": [
+        "Charles Bryant",
+        "Ivan Wu"
+    ],
+    "license": "MIT"
+}

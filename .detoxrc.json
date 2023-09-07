@@ -1,0 +1,57 @@
+{
+    "testRunner": "jest",
+    "runnerConfig": "e2e/config.json",
+    "behavior": {
+        "init": {
+            "exposeGlobals": false
+        }
+    },
+    "apps": {
+        "ios.debug": {
+            "type": "ios.app",
+            "binaryPath": "ios/build/M2ULife SIT/Build/Products/Debug-iphonesimulator/M2ULife SIT.app",
+            "build": "xcodebuild -workspace ios/M2ULife.xcworkspace -scheme 'M2ULife SIT' -configuration Debug -sdk iphonesimulator -derivedDataPath 'ios/build/M2ULife SIT'"
+        },
+        "ios.release": {
+            "type": "ios.app",
+            "binaryPath": "ios/build/M2ULife SIT/Build/Products/Release-iphonesimulator/M2ULife SIT.app",
+            "build": "export RCT_NO_LAUNCH_PACKAGER=true && xcodebuild -workspace ios/M2ULife.xcworkspace -scheme 'M2ULife SIT' -configuration Release -sdk iphonesimulator -derivedDataPath 'ios/build/M2ULife SIT' -quiet"
+        },
+        "android": {
+            "type": "android.apk",
+            "binaryPath": "SPECIFY_PATH_TO_YOUR_APP_BINARY"
+        }
+    },
+    "devices": {
+        "simulator": {
+            "type": "ios.simulator",
+            "device": {
+                "type": "iPhone 12 Pro Max"
+            }
+        },
+        "emulator": {
+            "type": "android.emulator",
+            "device": {
+                "avdName": "Pixel_3a_API_30_x86"
+            }
+        }
+    },
+    "configurations": {
+        "ios.sim.release": {
+            "device": "simulator",
+            "app": "ios.release"
+        },
+        "ios.sim.debug": {
+            "device": "simulator",
+            "app": "ios.debug"
+        },
+        "android.emu.debug": {
+            "device": "emulator",
+            "app": "android.debug"
+        },
+        "android.emu.release": {
+            "device": "emulator",
+            "app": "android.release"
+        }
+    }
+}

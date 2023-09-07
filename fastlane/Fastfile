@@ -1,0 +1,267 @@
+app_version = "0.9.18"
+android_version_code = "376"
+ios_build_number = "376"
+
+color_dev_badge = "black"
+color_sit_badge = "orange"
+color_uat_badge = "blue"
+color_stg_badge = "green"
+color_dca_badge = "purple"
+color_prd_badge = "red"
+
+platform :ios do
+  desc 'Build iOS app'
+  lane :build do |options|
+    shieldName = options[:shieldName]
+    scheme = options[:scheme]
+    exportMethod = options[:exportMethod]
+    plist = options[:plist]
+    ipaName = options[:ipaName]
+    gitTag = last_git_tag
+    add_badge(shield: shieldName,  no_badge: true, glob: "/ios/M2ULife/Images.xcassets/AppIcon.appiconset/MAYA-Logo*", shield_gravity: "South")
+    cocoapods(podfile: "./ios/Podfile", try_repo_update_on_error: true)
+    build_app(
+      scheme: "M2ULife #{scheme}",
+      workspace: "./ios/M2ULife.xcworkspace",
+      export_method: exportMethod,
+      clean: true,
+      output_name: ipaName
+    )
+  end
+
+  desc "Upload iOS app to App Center"
+  lane :appcenter do |options|
+    lastTag = last_git_tag
+    appName = options[:appName]
+    ipaPath = options[:ipaPath]
+    dsymPath = options[:dsymPath]
+    releaseNotes = "Merged-App-#{app_version}-#{ios_build_number}"
+    appcenter_upload(
+      api_token: "7903130a029adb1b9ae32ce0e8e8417b136a621b",
+      owner_name: "MBB-CFS",
+      owner_type: "organization",
+      app_name: appName,
+      file: ipaPath,
+      dsym: dsymPath,
+      notify_testers: true,
+      release_notes: releaseNotes
+    )
+  end
+
+  desc 'iOS Development version distribution flow'
+  lane :dev do 
+    name = "M2ULifeDEV"
+    build(shieldName: "DEV-#{app_version}-#{color_dev_badge}", scheme: "Development", exportMethod: "development", plist: "./ios/M2ULife/M2ULifeDEV-Info.plist", ipaName: "#{name}.ipa")
+    appcenter(appName: "MAE-iOS-Dev", ipaPath: "./#{name}.ipa", dsymPath: "./#{name}.app.dSYM.zip" )
+  end
+
+  desc 'iOS SIT version distribution flow'
+  lane :sit do 
+    name = "M2ULifeSIT"
+    update_ios_version()
+    build(shieldName: "SIT-#{app_version}-#{color_sit_badge}", scheme: "SIT", exportMethod: "enterprise", plist: "./ios/M2ULife/M2ULifeSIT-Info.plist", ipaName: "#{name}.ipa")
+    appcenter(appName: "MAE-iOS-SIT", ipaPath: "./#{name}.ipa", dsymPath: "./#{name}.app.dSYM.zip" )
+  end
+
+  desc 'iOS UAT version distribution flow'
+  lane :uat do 
+    name = "M2ULifeUAT"
+    update_ios_version()
+    build(shieldName: "UAT-#{app_version}-#{color_uat_badge}", scheme: "UAT", exportMethod: "enterprise", plist: "./ios/M2ULife/M2ULifeUAT-Info.plist", ipaName: "#{name}.ipa")
+    appcenter(appName: "MAE-iOS-UAT", ipaPath: "./#{name}.ipa", dsymPath: "./#{name}.app.dSYM.zip" )
+  end
+
+  desc 'iOS STG version distribution flow'
+  lane :stg do 
+    name = "M2ULifeSTG"
+    update_ios_version()
+    build(shieldName: "STG-#{app_version}-#{color_stg_badge}", scheme: "Staging", exportMethod: "enterprise", plist: "./ios/M2ULife/M2ULifeSTG-Info.plist", ipaName: "#{name}.ipa")
+    appcenter(appName: "MAE-IOS-STG", ipaPath: "./#{name}.ipa", dsymPath: "./#{name}.app.dSYM.zip" )
+  end
+
+
+  desc 'iOS CIND version distribution flow'
+  lane :cind do 
+    name = "M2ULifeCIND"
+    build(shieldName: "CIND-#{app_version}-#{color_dca_badge}", scheme: "CIND", exportMethod: "enterprise", plist: "./ios/M2ULife/M2ULifeCIND-Info.plist", ipaName: "#{name}.ipa")
+    appcenter(appName: "MAE-iOS-CIND", ipaPath: "./#{name}.ipa", dsymPath: "./#{name}.app.dSYM.zip" )
+  end
+
+  desc 'iOS NTT version distribution flow'
+  lane :ntt do 
+    name = "M2ULifeNTT"
+    build(shieldName: "NTT-#{app_version}-#{color_dca_badge}", scheme: "NTT", exportMethod: "enterprise", plist: "./ios/M2ULife/M2ULifeNTT-Info.plist", ipaName: "#{name}.ipa")
+    appcenter(appName: "MAE-iOS-NTT", ipaPath: "./#{name}.ipa", dsymPath: "./#{name}.app.dSYM.zip" )
+  end
+
+  desc 'iOS KLDC version distribution flow'
+  lane :kldc do 
+    name = "M2ULifeKLDC"
+    build(shieldName: "KLDC-#{app_version}-#{color_dca_badge}", scheme: "KLDC", exportMethod: "enterprise", plist: "./ios/M2ULife/M2ULifeKLDC-Info.plist", ipaName: "#{name}.ipa")
+    appcenter(appName: "MAE-iOS-KLDC", ipaPath: "./#{name}.ipa", dsymPath: "./#{name}.app.dSYM.zip" )
+  end
+
+  desc "iOS Production version distribution flow"
+  lane :production do
+    add_badge(shield:  "PRD-#{app_version}-#{color_prd_badge}",  no_badge: true, glob: "/ios/M2ULife/Images.xcassets/AppIcon.appiconset/MAYA-Logo*", shield_gravity: "South")
+    build_app(
+      scheme: "M2ULife Production",
+      workspace: "./ios/M2ULife.xcworkspace",
+      export_method: "app-store",
+      clean: true,
+      output_name: "M2ULife.ipa"
+    )
+  end
+
+end
+
+platform :android do
+
+  desc 'Build the Android application'
+  lane :build do |options|
+    shieldName = options[:shieldName]
+    buildVariant = options[:buildVariant]
+    buildType = options[:buildType]
+    envFile = options[:envFile]
+    add_badge(shield: shieldName,  no_badge: true, glob: "/android/app/src/main/res/mipmap-*/maya*", shield_gravity: "South")
+    gradle(task: 'clean', project_dir: 'android/')
+    gradle(task: 'assemble', build_type: "#{buildVariant}#{buildType}", project_dir: 'android/', system_properties: { "ENVFILE": "#{envFile}" })
+  end
+
+  desc "Upload Android app to App Center"
+  lane :appcenter do |options|
+    lastTag = last_git_tag
+    appName = options[:appName]
+    apkPath = options[:apkPath]
+    mappingPath = options[:mappingPath]
+    releaseNotes = "Merged-App-#{app_version}-#{android_version_code}"
+    appcenter_upload(
+      api_token: "7903130a029adb1b9ae32ce0e8e8417b136a621b",
+      owner_name: "MBB-CFS",
+      owner_type: "organization",
+      app_name: appName,
+      file: apkPath,
+      notify_testers: true,
+      release_notes: releaseNotes
+    )
+  end
+
+  desc 'Android Development version distribution flow'
+  lane :dev do |options|
+    ENV['ENVFILE'] = '.env.dev'
+    build(shieldName: "DEV-#{app_version}-#{color_dev_badge}", buildVariant: "Dev", buildType: "Release", envFile: ".env.dev")
+    appcenter(appName: "MAE-Android-Dev", apkPath: "./android/app/build/outputs/apk/dev/release/app-dev-universal-release.apk", mappingPath: "./android/app/build/outputs/mapping/dev/release/mapping.txt" )
+  end
+
+  desc 'Android SIT version distribution flow'
+  lane :sit do |options|
+    ENV['ENVFILE'] = '.env.sit'
+    update_android_version()
+    build(shieldName: "SIT-#{app_version}-#{color_sit_badge}", buildVariant: "Sit", buildType: "Release", envFile: ".env.sit")
+    appcenter(appName: "MAE-Android-SIT", apkPath: "./android/app/build/outputs/apk/sit/release/app-sit-universal-release.apk", mappingPath: "./android/app/build/outputs/mapping/sit/release/mapping.txt" )
+  end
+
+  desc 'Android SIT Huawei version distribution flow'
+  lane :huaweisit do |options|
+    ENV['ENVFILE'] = '.env.huaweisit'
+    update_android_version()
+    build(shieldName: "SIT-#{app_version}-#{color_sit_badge}", buildVariant: "huaweisit", buildType: "Release", envFile: ".env.huaweisit")
+    appcenter(appName: "MAE-HUAWEI-SIT", apkPath: "./android/app/build/outputs/apk/huaweisit/release/app-huaweisit-universal-release.apk", mappingPath: "./android/app/build/outputs/mapping/sit/release/mapping.txt" )
+  end
+
+  desc 'Android UAT version distribution flow'
+  lane :uat do |options|
+    ENV['ENVFILE'] = '.env.uat'
+    update_android_version()
+    build(shieldName: "UAT-#{app_version}-#{color_uat_badge}", buildVariant: "Uat", buildType: "Release", envFile: ".env.uat")
+    appcenter(appName: "MAE-Android-UAT", apkPath: "./android/app/build/outputs/apk/uat/release/app-uat-universal-release.apk", mappingPath: "./android/app/build/outputs/mapping/uat/release/mapping.txt" )
+  end
+
+  desc 'Android UAT Huawei version distribution flow'
+  lane :huaweiuat do |options|
+    ENV['ENVFILE'] = '.env.huaweiuat'
+    update_android_version()
+    build(shieldName: "UAT-#{app_version}-#{color_uat_badge}", buildVariant: "huaweiuat", buildType: "Release", envFile: ".env.huaweiuat")
+    appcenter(appName: "MAE-Huawei-UAT", apkPath: "./android/app/build/outputs/apk/huaweiuat/release/app-huaweiuat-universal-release.apk", mappingPath: "./android/app/build/outputs/mapping/uat/release/mapping.txt" )
+   end
+
+  desc 'Android Staging Huawei version distribution flow'
+  lane :huaweistg do |options|
+    ENV['ENVFILE'] = '.env.huaweistg'
+    update_android_version()
+    build(shieldName: "STG-#{app_version}-#{color_stg_badge}", buildVariant: "huaweistg", buildType: "Release", envFile: ".env.huaweistg")
+    appcenter(appName: "MAE-Huawei-STG", apkPath: "./android/app/build/outputs/apk/huaweistg/release/app-huaweistg-universal-release.apk", mappingPath: "./android/app/build/outputs/mapping/stg/release/mapping.txt" )
+  end
+
+  desc 'Android Staging version distribution flow'
+  lane :stg do |options|
+    ENV['ENVFILE'] = '.env.stg'
+    update_android_version()
+    build(shieldName: "STG-#{app_version}-#{color_stg_badge}", buildVariant: "Stg", buildType: "Release", envFile: ".env.stg")
+    appcenter(appName: "MAYA-Staging", apkPath: "./android/app/build/outputs/apk/stg/release/app-stg-universal-release.apk", mappingPath: "./android/app/build/outputs/mapping/stg/release/mapping.txt" )
+  end
+
+  desc 'Android CIND version distribution flow'
+  lane :cind do |options|
+    ENV['ENVFILE'] = '.env.cind'
+    update_android_version()
+    build(shieldName: "CIND-#{app_version}-#{color_dca_badge}", buildVariant: "Cind", buildType: "Release", envFile: ".env.cind")
+    appcenter(appName: "MAE-Android-CIND", apkPath: "./android/app/build/outputs/apk/cind/release/app-cind-universal-release.apk", mappingPath: "./android/app/build/outputs/mapping/cind/release/mapping.txt" )
+  end
+
+  desc 'Android NTT version distribution flow'
+  lane :ntt do |options|
+    ENV['ENVFILE'] = '.env.ntt'
+    update_android_version()
+    build(shieldName: "NTT-#{app_version}-#{color_dca_badge}", buildVariant: "Ntt", buildType: "Release", envFile: ".env.ntt")
+    appcenter(appName: "MAE-NTT", apkPath: "./android/app/build/outputs/apk/ntt/release/app-ntt-universal-release.apk", mappingPath: "./android/app/build/outputs/mapping/ntt/release/mapping.txt" )
+  end
+
+  desc 'Android KLDC version distribution flow'
+  lane :kldc do |options|
+    ENV['ENVFILE'] = '.env.kldc'
+    update_android_version()
+    build(shieldName: "KLDC-#{app_version}-#{color_dca_badge}", buildVariant: "Kldc", buildType: "Release", envFile: ".env.kldc")
+    appcenter(appName: "MAE-Android-KLDC", apkPath: "./android/app/build/outputs/apk/kldc/release/app-kldc-universal-release.apk", mappingPath: "./android/app/build/outputs/mapping/kldc/release/mapping.txt" )
+  end
+
+  desc 'Android Production version distribution flow'
+  lane :production do
+    ENV['ENVFILE'] = '.env.prod'
+    update_android_version()
+    build(shieldName: "PRD-#{app_version}-#{color_prd_badge}", buildVariant: "Prod", buildType: "Release", envFile: ".env.prod")
+    appcenter(appName: "MAE-Production", apkPath: "./android/app/build/outputs/apk/prod/release/app-prod-universal-release.apk", mappingPath: "./android/app/build/outputs/mapping/prod/release/mapping.txt" )
+  end
+
+  desc 'Android Production Huawei version distribution flow'
+  lane :huaweiproduction do
+    ENV['ENVFILE'] = '.env.huaweiprod'
+    update_android_version()
+    build(shieldName: "PRD-#{app_version}-#{color_prd_badge}", buildVariant: "huaweiprod", buildType: "Release", envFile: ".env.huaweiprod")
+    appcenter(appName: "MAE-Huawei-Production", apkPath: "./android/app/build/outputs/apk/huaweiprod/release/app-huaweiprod-universal-release.apk", mappingPath: "./android/app/build/outputs/mapping/prod/release/mapping.txt" )
+ end
+end
+
+desc "Update android versioning"
+lane :update_android_version do
+  android_set_version_name(
+    version_name: "'#{app_version}'",
+    gradle_file: "android/app/build.gradle"
+  )
+  android_set_version_code(
+    version_code: android_version_code,
+    gradle_file: "android/app/build.gradle"
+  )
+end
+
+desc "Update ios versioning"
+lane :update_ios_version do
+  increment_version_number(
+    version_number: "'#{app_version}'",
+    xcodeproj: "./ios/M2ULife.xcodeproj"
+  )
+  increment_build_number(
+    build_number: "'#{ios_build_number}'",
+    xcodeproj: "./ios/M2ULife.xcodeproj"
+  )
+end

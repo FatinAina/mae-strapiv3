@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: maya-mobile
+  links:
+    - url: https://github.maybank.com/
+      title: maya-mobile
+      icon: dashboard
+  description: maya-mobile
+  annotations:
+    github.com/project-slug: MSS-DB/maya-mobile
+    # backstage.io/techdocs-ref: dir:.
+spec:
+  type: service
+  owner: group:digital-maya-mobile-team
+  lifecycle: production

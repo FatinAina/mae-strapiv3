@@ -1,0 +1,28 @@
+{
+    "printWidth": 100,
+    "tabWidth": 4,
+    "trailingComma": "es5",
+    "importOrder": [
+        "^@screens/(.*)$",
+        "^@config",
+        "^@config/(.*)$",
+        "^@navigation/(.*)$",
+        "^@layouts/(.*)$",
+        "^@components/(.*)$",
+        "^@context",
+        "^@services",
+        "^@services/(.*)$",
+        "^@redux",
+        "^@redux/(.*)$",
+        "^@constants/(.*)$",
+        "^@native/(.*)$",
+        "^@libs/(.*)$",
+        "^@utils",
+        "^@utils/(.*)$",
+        "^@styles/(.*)$",
+        "^@assets",
+        "^[./]"
+    ],
+    "importOrderSeparation": true,
+    "experimentalBabelParserPluginsList": ["jsx", "flow", "classProperties"]
+}

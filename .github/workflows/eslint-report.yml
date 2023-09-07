@@ -1,0 +1,26 @@
+name: Generate Eslint Report
+env:
+    NODE_EXTRA_CA_CERTS: /Users/maybankidh2/githubcert/githubcert.pem
+on: [pull_request, workflow_dispatch]
+
+jobs:
+    generate:
+        runs-on: MACMINI2
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 16
+
+            - name: Install dependencies
+              run: |
+                  npm i --legacy-peer-deps
+            - name: Run eslint on changed files
+              run: |
+                  npx eslint $(git diff --name-only origin/development | grep -E '\.(js|jsx)$' | xargs)  -f 'node_modules/eslint-html-reporter/reporter.js' > lint-report.html
+            - name: Archive code coverage results
+              if: always()
+              uses: actions/upload-artifact@v3
+              with:
+                  name: eslint-report
+                  path: lint-report.html

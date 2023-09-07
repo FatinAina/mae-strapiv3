@@ -1,0 +1,9 @@
+**/*.min.js
+**/libs/**
+**/natives/**
+**/node_modules/**
+**/android/**
+**/ios/**
+**/patches/**
+**/packager/**
+**/fastlane/**

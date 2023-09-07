@@ -1,0 +1,114 @@
+name: MAE-Mobile-SIT-Build
+env:
+    DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
+    LANG: en_US.UTF-8
+    LC_ALL: en_US.UTF-8
+    #FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+    ANDROID_HOME: /etc/github/Android/sdk
+    ## Fixing the self-sign cert issues on this GitHub Server. (NA for Maybanks-MacBook-1)
+    NODE_EXTRA_CA_CERTS: /etc/github/githubcert.pem
+    Fastlane_generate_git_tag_semVer: "0.9.12"
+    buildNumber: ${{github.run_number}}
+
+on:
+    workflow_dispatch:
+    # push:
+    #  branches: [ master ]
+    # pull_request:
+    #  branches: [ master ]
+
+jobs:
+    Android_build:
+        runs-on: [MACBOOK1]
+        needs: [Huawei_sit_build]
+        steps:
+            - uses: actions/checkout@v3
+            - name: set up JDK 11
+              uses: actions/setup-java@v2
+              with:
+                  java-version: "11"
+                  distribution: "adopt"
+                  #cache: gradle
+
+            #- name: Copy Local.properties
+            #run: cp /Users/maybankidh1/MAYA-FASTFILE/Android/local.properties .
+
+            - name: Grant execute permission for gradlew
+              run: chmod +x android/gradlew
+
+            #- name: sonarqube scan
+            # run: /etc/github/sonar-scanner-macosx/bin/sonar-scanner -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.projectKey=maya-mobile -Dsonar.projectName=maya-mobile  -Dsonar.sourceEncoding=UTF-8 -Dsonar.java.binaries=. -Dsonar.sonar.skipPackageDesign=true -Dsonar.projectVersion=${{ github.run_number }}
+
+            #fortify:
+            #  runs-on: [ MACBOOK1 ]
+            #  if: contains(github.ref, 'main')
+            #  needs:
+            #  - Android_build
+
+            #  steps:
+            #  - name: Fortify Scanning
+            #    run: |
+            #       echo "Fortify Clean"
+            #       /Users/maybankidh2/tools/Fortify/Fortify_SCA_and_Apps_20.1.0/bin/sourceanalyzer -clean -b "maya-mobile-logfile "/data/fortify-logs/maya-mobile.log"
+
+            #       echo "Fortify Translate"
+            #       /Users/maybankidh2/tools/Fortify/Fortify_SCA_and_Apps_20.1.0/bin/sourceanalyzer -verbose -b "maya-mobile" /Users/maybankidh2/actions-runner/_work/maya-mobile/maya-mobile/src -logfile "/data/fortify-logs/maya-mobile-translate.log"
+
+            #       echo "Fortify Scan"
+            #       /Users/maybankidh2/tools/Fortify/Fortify_SCA_and_Apps_20.1.0/bin/sourceanalyzer -verbose -b "maya-mobile" -logfile "/data/fortify-logs/maya-mobile-scan.log" -scan -f "/data/fortify-logs/maya-mobile.fpr"
+
+            #       echo "Fortify Upload"
+            #       /Users/maybankidh2/tools/Fortify/Fortify_SCA_and_Apps_20.1.0/bin/fortifyclient -url http://172.31.172.143:8080/ssc -authtoken ODFmZWNhODktOWE2Mi00ODc1LTk5OTItMDlhYWMyNTRjZmM4 uploadFPR -file "/data/fortify-logs/maya-mobile.fpr" -project maya-mobile -version 1.0
+            #    shell: bash
+
+            - name: Build with Gradle
+              run: |
+                  #git config --global url."https://".insteadOf ssh://
+                  rm package-lock.json && rm Gemfile.lock
+                  npm config ls
+                  npm i --legacy-peer-deps
+                  bundle install
+                  # bundle update
+                  # bundle exec fastlane push_tag_to_remote
+                  # fastlane generate_git_tag semVer:"${{env.Fastlane_generate_git_tag_semVer}}" buildNumber:"${{env.buildNumber}}" 
+                     #rm Gemfile.lock
+                     #buildNumber: ${{env.buildNumber}}
+                     #Fastlane_generate_git_tag semVer: '0.9.6' 
+                  fastlane android sit
+    IOS_build:
+        runs-on: [MACBOOK1]
+        environment:
+            name: sit
+        # needs: [ Android_build ]
+        steps:
+            - uses: actions/checkout@v3
+            - name: IOS Build
+              run: |
+                  security unlock-keychain -p ${{ secrets.MACBOOK1 }} login.keychain
+                  rm Gemfile.lock && cd ios && rm Podfile.lock && cd ..
+                  npm i --legacy-peer-deps
+                  bundle update
+                  bundle exec fastlane ios sit
+    Huawei_sit_build:
+        runs-on: [MACBOOK1]
+        needs: [IOS_build]
+        steps:
+            - uses: actions/checkout@v3
+            - name: set up JDK 11
+              uses: actions/setup-java@v2
+              with:
+                  java-version: "11"
+                  distribution: "adopt"
+                  #cache: gradle
+
+            #- name: Copy Local.properties
+            #run: cp /Users/maybankidh1/MAYA-FASTFILE/Android/local.properties .
+
+            - name: Grant execute permission for gradlew
+              run: chmod +x android/gradlew
+            - name: Build with Gradle
+              run: |
+                  rm package-lock.json && rm Gemfile.lock
+                  npm i --legacy-peer-deps
+                  bundle install
+                  fastlane android huaweisit
