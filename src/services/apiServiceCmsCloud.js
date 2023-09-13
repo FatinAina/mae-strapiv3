@@ -1,6 +1,6 @@
 import ApiManager from "@services/ApiManager";
 
-import { TOKEN_TYPE_MAYA, METHOD_POST, METHOD_GET, TIMEOUT } from "@constants/api";
+import { TOKEN_TYPE_MAYA, METHOD_POST, METHOD_GET, METHOD_DELETE, TIMEOUT } from "@constants/api";
 
 export const getAllCountdownBanners = (endpoint) => {
     return ApiManager.service({
@@ -161,4 +161,37 @@ export const disLikeHomeContent = (endpoint, contentId, showLoader = true) => {
         tokenType: TOKEN_TYPE_MAYA,
         showPreloader: showLoader,
     });
+};
+
+export const getLike = (endpoint, query) => {
+    const url = endpoint + query;
+    return ApiManager.service({
+        url,
+        reqType: METHOD_GET,
+    });
+};
+export const postLike = (url, userId, showLoader = true, methodType) => {
+    if (methodType == "METHOD_DELETE") {
+        body = null;
+        return ApiManager.service({
+            url: url,
+            data: body,
+            reqType: METHOD_DELETE,
+            tokenType: TOKEN_TYPE_MAYA,
+            showPreloader: showLoader,
+        });
+    } else {
+        body = {
+            userId: userId,
+            engagementType: "like",
+            contentId: showLoader,
+        };
+        return ApiManager.service({
+            url: url,
+            data: body,
+            reqType: METHOD_POST,
+            tokenType: TOKEN_TYPE_MAYA,
+            showPreloader: showLoader,
+        });
+    }
 };
