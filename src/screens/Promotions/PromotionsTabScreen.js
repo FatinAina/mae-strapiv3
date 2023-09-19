@@ -19,7 +19,6 @@ import {
     getAllCountdownBanners,
     getPromosByTag,
     getFeaturedPromosByTag,
-    LikeHomeContent,
     BookmarkHomeContent,
     postLike,
     getLike,
@@ -401,7 +400,11 @@ class PromotionsTabScreen extends Component {
             this.setState({
                 featuredList: updatedFeaturedList,
                 refresh: !refresh,
+                showLatest: false,
+                latestList: [],
             });
+
+            this._syncDataWithAPI();
         }
     };
 
