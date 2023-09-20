@@ -12,7 +12,7 @@ import { showErrorToast } from "@components/Toast";
 
 import { withModelContext } from "@context";
 
-import { LikeHomeContent } from "@services";
+import { LikeHomeContent, postLike, getLike } from "@services";
 import { logEvent } from "@services/analytics";
 import { withApi } from "@services/api";
 import { getDashboardPromoAndArticles } from "@services/apiServiceCmsCloud";
@@ -313,6 +313,7 @@ function MainArticle({
     }
 
     function onPress() {
+        console.log("jaja", id);
         onLike(id);
         generateHaptic("selection", true);
     }
@@ -559,7 +560,7 @@ Article.propTypes = {
     onLike: PropTypes.func,
     userContent: PropTypes.object,
 };
-function FeaturedArticles({ navigation, getModel, api, initialLoaded }) {
+function FeaturedArticles({ id, navigation, getModel, api, initialLoaded }) {
     const [loading, setLoading] = useState(false);
     const [articles, setArticles] = useState([]);
     const [loaded, setLoaded] = useState(0);
@@ -569,7 +570,23 @@ function FeaturedArticles({ navigation, getModel, api, initialLoaded }) {
     } = getModel(["auth", "cloud"]);
     const isUnmount = useRef(false);
     const endpoint = cmsCloudEnabled ? cmsUrl : `${ENDPOINT_BASE}/cms/api/v1`;
-    const likeEndpoint = cmsCloudEnabled ? cmsUrl : `${ENDPOINT_BASE}/user/v2/users`;
+    // const likeEndpoint = cmsCloudEnabled ? cmsUrl : `${ENDPOINT_BASE}/user/v2/users`;
+    const likeEndpoint = "http://localhost:3000/v1/engagement";
+
+    _getLikeCount = async (contentIds) => {
+        try {
+            const userDetails = getModel("user");
+            const userId = userDetails?.m2uUserId;
+            const endpoint = `http://localhost:3001/v1/engagements`;
+            const query = `?userId=${userId}&engagementTypes=like&contentIds=${contentIds}`;
+            const data = await getLike(endpoint, query);
+            console.log("jiha", data);
+            return data;
+        } catch (error) {
+            console.log("error retrieving engagement service");
+            throw error;
+        }
+    };
 
     const getArticles = useCallback(
         async (withLoading = true) => {
@@ -591,8 +608,23 @@ function FeaturedArticles({ navigation, getModel, api, initialLoaded }) {
 
                 if (response && response.data) {
                     const { content } = response.data;
+                    const contentIds = content.map((item) => item.id); // Collect content IDs into an array
+                    console.log("Content IDs:", contentIds);
+
+                    // Initialize an empty array to store the like count data for each contentId
+                    const likeCountDataArray = [];
+
+                    // Iterate through each contentId and fetch the like count data
+                    for (const contentId of contentIds) {
+                        const likeCountData = (await this._getLikeCount(contentId))?.data?.data
+                            .userEngagements[contentId]?.like;
+                        likeCountDataArray.push(likeCountData);
+                    }
+
+                    console.log("jaja:", likeCountDataArray);
 
                     if (content.length && !isUnmount.current) {
+                        console.log("abc", content);
                         setArticles(content);
                     }
                 } else {
@@ -613,10 +645,38 @@ function FeaturedArticles({ navigation, getModel, api, initialLoaded }) {
     }, [getArticles]);
 
     async function onLike(id) {
+        // const { latestList, refresh } = this.state;
+        // const { getModel } = this.props;
+        // const { cmsUrl, cmsCloudEnabled } = getModel("cloud");
+
+        // const userDetails = getModel("user");
+        // const { m2uUserId: userId } = userDetails || {};
+        // let endpoint = "http://localhost:3000/v1/engagement";
+
+        // this.setState({ loader: true });
+
+        // const updatedLatestList = [...latestList];
+        // const updatedItem = updatedLatestList[index];
+        // if (updatedItem.userContent.emotionStatus == "LIKE") {
+        //     methodType = "METHOD_DELETE";
+        //     endpoint += `/${id}?userId=${userId}&engagementType=like`;
+        // } else {
+        //     methodType = "METHOD_POST";
+        // }
+
         if (id && token) {
             try {
-                const response = await LikeHomeContent(likeEndpoint, id, false);
+                const response = await postLike(likeEndpoint, id, false);
+                // const { content } = response.data;
+                // const likeCountData = (await this._getLikeCount(content[0].id))?.data?.data.userEngagements[content[0].id].like;
+                // console.log("jaja", likeCountData)
+                // updatedItem.likeCount = likeCountData?.count || 0;
+                // updatedItem.userContent = {
+                //     emotionStatus: likeCountData?.userDidEngage ? "LIKE" : "",
+                // };
+                // console.log("azizi", updatedItem.userContent)
 
+                // updatedLatestList[index] = updatedItem;
                 if (response) {
                     // reload the data
                     refreshData();
