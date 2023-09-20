@@ -528,34 +528,38 @@ class ContentDetailsScreenTemplate extends React.Component {
         const { getModel } = this.props;
         const userDetails = getModel("user");
         const { m2uUserId: userId } = userDetails || {};
-        let endpoint = "http://localhost:3000/v1/engagement";
 
-        const updatedItem = this.state.item;
-        if (updatedItem.userContent.emotionStatus == "LIKE") {
-            methodType = "METHOD_DELETE";
-            endpoint += `/${id}?userId=${userId}&engagementType=like`;
-        } else {
-            methodType = "METHOD_POST";
-        }
+        if (userId) {
+            let endpoint = "http://localhost:3000/v1/engagement";
 
-        try {
-            const response = await postLike(endpoint, userId, id, methodType);
-            const likeCountData = (await this._getLikeCount(id))?.data?.data?.userEngagements?.like;
+            const updatedItem = this.state.item;
+            if (updatedItem.userContent.emotionStatus == "LIKE") {
+                methodType = "METHOD_DELETE";
+                endpoint += `/${id}?userId=${userId}&engagementType=like`;
+            } else {
+                methodType = "METHOD_POST";
+            }
 
-            updatedItem.likeCount = likeCountData?.count || 0;
-            updatedItem.userContent = {
-                emotionStatus: likeCountData?.userDidEngage ? "LIKE" : "",
-            };
+            try {
+                const response = await postLike(endpoint, userId, id, methodType);
+                const likeCountData = (await this._getLikeCount(id))?.data?.data?.userEngagements
+                    ?.like;
 
-            this.setState({ item: updatedItem });
-        } catch (err) {
-            console.log("Like ERROR:", err);
-        }
+                updatedItem.likeCount = likeCountData?.count || 0;
+                updatedItem.userContent = {
+                    emotionStatus: likeCountData?.userDidEngage ? "LIKE" : "",
+                };
 
-        if (this.props.isArticleMode) {
-            FAArticleScreen.onRequestLikeAricle(this.state.item.title);
-        } else {
-            this.props.logLikeButton(this.state.item.title);
+                this.setState({ item: updatedItem });
+            } catch (err) {
+                console.log("Like ERROR:", err);
+            }
+
+            if (this.props.isArticleMode) {
+                FAArticleScreen.onRequestLikeAricle(this.state.item.title);
+            } else {
+                this.props.logLikeButton(this.state.item.title);
+            }
         }
     };
 

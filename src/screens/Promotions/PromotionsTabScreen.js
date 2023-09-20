@@ -320,34 +320,38 @@ class PromotionsTabScreen extends Component {
 
         const userDetails = getModel("user");
         const { m2uUserId: userId } = userDetails || {};
+
         let endpoint = "http://localhost:3000/v1/engagement";
 
         this.setState({ loader: true });
 
-        const updatedLatestList = [...latestList];
-        const updatedItem = updatedLatestList[index];
-        if (updatedItem.userContent.emotionStatus == "LIKE") {
-            methodType = "METHOD_DELETE";
-            endpoint += `/${id}?userId=${userId}&engagementType=like`;
-        } else {
-            methodType = "METHOD_POST";
-        }
+        if (userId) {
+            const updatedLatestList = [...latestList];
+            const updatedItem = updatedLatestList[index];
+            if (updatedItem.userContent.emotionStatus == "LIKE") {
+                methodType = "METHOD_DELETE";
+                endpoint += `/${id}?userId=${userId}&engagementType=like`;
+            } else {
+                methodType = "METHOD_POST";
+            }
 
-        try {
-            const response = await postLike(endpoint, userId, id, methodType);
-            const likeCountData = (await this._getLikeCount(id))?.data?.data?.userEngagements[id]
-                ?.like;
+            try {
+                const response = await postLike(endpoint, userId, id, methodType);
+                const likeCountData = (await this._getLikeCount(id))?.data?.data?.userEngagements[
+                    id
+                ]?.like;
 
-            updatedItem.likeCount = likeCountData?.count || 0;
-            updatedItem.userContent = {
-                emotionStatus: likeCountData?.userDidEngage ? "LIKE" : "",
-            };
+                updatedItem.likeCount = likeCountData?.count || 0;
+                updatedItem.userContent = {
+                    emotionStatus: likeCountData?.userDidEngage ? "LIKE" : "",
+                };
 
-            updatedLatestList[index] = updatedItem;
+                updatedLatestList[index] = updatedItem;
 
-            this.setState({ latestList: updatedLatestList, refresh: !refresh });
-        } catch (err) {
-            console.log("Like ERROR:", err);
+                this.setState({ latestList: updatedLatestList, refresh: !refresh });
+            } catch (err) {
+                console.log("Like ERROR:", err);
+            }
         }
     };
 
