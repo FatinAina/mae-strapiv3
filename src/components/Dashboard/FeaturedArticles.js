@@ -560,7 +560,7 @@ Article.propTypes = {
     onLike: PropTypes.func,
     userContent: PropTypes.object,
 };
-function FeaturedArticles({ id, navigation, getModel, api, initialLoaded }) {
+function FeaturedArticles({ id, navigation, getModel, api, initialLoaded, contentIds }) {
     const [loading, setLoading] = useState(false);
     const [articles, setArticles] = useState([]);
     const [loaded, setLoaded] = useState(0);
@@ -571,7 +571,10 @@ function FeaturedArticles({ id, navigation, getModel, api, initialLoaded }) {
     const isUnmount = useRef(false);
     const endpoint = cmsCloudEnabled ? cmsUrl : `${ENDPOINT_BASE}/cms/api/v1`;
     // const likeEndpoint = cmsCloudEnabled ? cmsUrl : `${ENDPOINT_BASE}/user/v2/users`;
+    const userDetails = getModel("user");
+    const userId = userDetails?.m2uUserId;
     const likeEndpoint = "http://localhost:3000/v1/engagement";
+    const query = `?userId=${userId}&engagementTypes=like&contentIds=${contentIds}`;
 
     _getLikeCount = async (contentIds) => {
         try {
@@ -608,8 +611,23 @@ function FeaturedArticles({ id, navigation, getModel, api, initialLoaded }) {
 
                 if (response && response.data) {
                     const { content } = response.data;
+                    for (const item of content) {
+                        const contentId = item.id; // Get the content ID for the current item
+                        console.log("susu", contentId);
+
+                        // Fetch the like count data for the current content ID
+                        const likeCountData = (await this._getLikeCount(contentId))?.data?.data
+                            .userEngagements[contentId]?.like;
+                        console.log("shh", contentId, ":", likeCountData);
+
+                        // Update the current item with the like count data
+                        item.likeCount = likeCountData?.count || 0;
+                        item.userContent = {
+                            emotionStatus: likeCountData?.userDidEngage ? "LIKE" : "",
+                        };
+                    }
                     const contentIds = content.map((item) => item.id); // Collect content IDs into an array
-                    console.log("Content IDs:", contentIds);
+                    console.log("susu", contentIds);
 
                     // Initialize an empty array to store the like count data for each contentId
                     const likeCountDataArray = [];
@@ -645,38 +663,10 @@ function FeaturedArticles({ id, navigation, getModel, api, initialLoaded }) {
     }, [getArticles]);
 
     async function onLike(id) {
-        // const { latestList, refresh } = this.state;
-        // const { getModel } = this.props;
-        // const { cmsUrl, cmsCloudEnabled } = getModel("cloud");
-
-        // const userDetails = getModel("user");
-        // const { m2uUserId: userId } = userDetails || {};
-        // let endpoint = "http://localhost:3000/v1/engagement";
-
-        // this.setState({ loader: true });
-
-        // const updatedLatestList = [...latestList];
-        // const updatedItem = updatedLatestList[index];
-        // if (updatedItem.userContent.emotionStatus == "LIKE") {
-        //     methodType = "METHOD_DELETE";
-        //     endpoint += `/${id}?userId=${userId}&engagementType=like`;
-        // } else {
-        //     methodType = "METHOD_POST";
-        // }
-
         if (id && token) {
+            console.log("faham", onLike);
             try {
-                const response = await postLike(likeEndpoint, id, false);
-                // const { content } = response.data;
-                // const likeCountData = (await this._getLikeCount(content[0].id))?.data?.data.userEngagements[content[0].id].like;
-                // console.log("jaja", likeCountData)
-                // updatedItem.likeCount = likeCountData?.count || 0;
-                // updatedItem.userContent = {
-                //     emotionStatus: likeCountData?.userDidEngage ? "LIKE" : "",
-                // };
-                // console.log("azizi", updatedItem.userContent)
-
-                // updatedLatestList[index] = updatedItem;
+                const response = await postLike(likeEndpoint, id, query, false);
                 if (response) {
                     // reload the data
                     refreshData();
