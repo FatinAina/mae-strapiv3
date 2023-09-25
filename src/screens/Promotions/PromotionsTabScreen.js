@@ -19,8 +19,9 @@ import {
     getAllCountdownBanners,
     getPromosByTag,
     getFeaturedPromosByTag,
-    LikeHomeContent,
     BookmarkHomeContent,
+    postLike,
+    getLike,
 } from "@services";
 import { FAArticleScreen } from "@services/analytics/analyticsArticles";
 import { FAPromotionsScreen } from "@services/analytics/analyticsPromotions";
@@ -236,7 +237,6 @@ class PromotionsTabScreen extends Component {
                 null,
                 articleMode
             );
-            console.log(data);
 
             //set last page flag for pagination purposes
             let lastPage = false;
@@ -245,6 +245,20 @@ class PromotionsTabScreen extends Component {
             }
 
             this.setState({ isLastPage: lastPage });
+
+            const ids = data.map((object) => object.id).join(",");
+            const likeCountResponse = await this._getLikeCount(ids);
+            const likeCountData = likeCountResponse?.data?.data?.userEngagements || {};
+
+            data.forEach((object) => {
+                const contentId = object.id;
+                const likeData = likeCountData[contentId]?.like || {};
+
+                object.likeCount = likeData.count || 0;
+                object.userContent = {
+                    emotionStatus: likeData.userDidEngage ? "LIKE" : "",
+                };
+            });
 
             return data;
         } catch (error) {
@@ -303,34 +317,42 @@ class PromotionsTabScreen extends Component {
         const { latestList, refresh } = this.state;
         const { getModel } = this.props;
         const { cmsUrl, cmsCloudEnabled } = getModel("cloud");
-        const endpoint = cmsCloudEnabled ? cmsUrl : `${ENDPOINT_BASE}/user/v2/users`;
+
+        const userDetails = getModel("user");
+        const { m2uUserId: userId } = userDetails || {};
+
+        let endpoint = "http://localhost:3000/v1/engagement";
 
         this.setState({ loader: true });
 
-        LikeHomeContent(endpoint, id)
-            .then(async (response) => {
-                const result = response.data.result;
-                // firebase.analytics().logEvent('LikeContent', result);
+        if (userId) {
+            const updatedLatestList = [...latestList];
+            const updatedItem = updatedLatestList[index];
+            if (updatedItem.userContent.emotionStatus == "LIKE") {
+                methodType = "METHOD_DELETE";
+                endpoint += `/${id}?userId=${userId}&engagementType=like`;
+            } else {
+                methodType = "METHOD_POST";
+            }
 
-                let updatedLatestList = latestList;
-                let updatedItem = updatedLatestList[index];
-                if (
-                    updatedItem.userContent != null &&
-                    updatedItem.userContent.emotionStatus == "LIKE"
-                ) {
-                    updatedItem.likeCount--;
-                } else {
-                    updatedItem.likeCount++;
-                }
+            try {
+                const response = await postLike(endpoint, userId, id, methodType);
+                const likeCountData = (await this._getLikeCount(id))?.data?.data?.userEngagements[
+                    id
+                ]?.like;
 
-                updatedItem.userContent.emotionStatus = result.emotionStatus;
+                updatedItem.likeCount = likeCountData?.count || 0;
+                updatedItem.userContent = {
+                    emotionStatus: likeCountData?.userDidEngage ? "LIKE" : "",
+                };
+
                 updatedLatestList[index] = updatedItem;
 
                 this.setState({ latestList: updatedLatestList, refresh: !refresh });
-            })
-            .catch((err) => {
-                console.log(" like ERROR: ", err);
-            });
+            } catch (err) {
+                console.log("Like ERROR:", err);
+            }
+        }
     };
 
     _requestBookmarkContent = async (id, index) => {
@@ -382,7 +404,11 @@ class PromotionsTabScreen extends Component {
             this.setState({
                 featuredList: updatedFeaturedList,
                 refresh: !refresh,
+                showLatest: false,
+                latestList: [],
             });
+
+            this._syncDataWithAPI();
         }
     };
 
@@ -488,6 +514,21 @@ class PromotionsTabScreen extends Component {
                     </ScrollView>
                 </View>
             );
+        }
+    };
+
+    _getLikeCount = async (contentIds) => {
+        try {
+            const { getModel } = this.props;
+            const userDetails = getModel("user");
+            const userId = userDetails?.m2uUserId;
+            const endpoint = `http://localhost:3001/v1/engagements`;
+            const query = `?userId=${userId}&engagementTypes=like&contentIds=${contentIds}`;
+            const data = await getLike(endpoint, query);
+            return data;
+        } catch (error) {
+            console.log("error retrieving engagement service");
+            throw error;
         }
     };
 

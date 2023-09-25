@@ -8,6 +8,7 @@ import { showErrorToast } from "@components/Toast";
 import { withModelContext } from "@context";
 
 import { getHomeDetailScreenData } from "@services";
+import { getLike } from "@services";
 import { FAArticleScreen } from "@services/analytics/analyticsArticles";
 import { FAPromotionDetailsScreen } from "@services/analytics/analyticsPromotions";
 
@@ -55,6 +56,21 @@ class PromotionDetailsScreen extends React.Component {
         this.setState({ contentData: this.props.route?.params?.itemDetails });
     };
 
+    _getLikeCount = async (contentId) => {
+        try {
+            const { getModel } = this.props;
+            const userDetails = getModel("user");
+            const userId = userDetails?.m2uUserId;
+            const endpoint = `http://localhost:3001/v1/engagement`;
+            const query = `/${contentId}?userId=${userId}&engagementTypes=like`;
+            const data = await getLike(endpoint, query);
+            return data;
+        } catch (error) {
+            console.log("error retrieving engagement service");
+            throw error;
+        }
+    };
+
     fetchContentData = async (id) => {
         try {
             const { cmsUrl, cmsCloudEnabled } = this.props.getModel("cloud");
@@ -63,6 +79,15 @@ class PromotionDetailsScreen extends React.Component {
 
             if (response) {
                 const { result } = response.data;
+
+                const likeCountResponse = await this._getLikeCount(result.id);
+
+                const likeCountData = likeCountResponse?.data?.data?.userEngagements || {};
+
+                result.likeCount = likeCountData.like.count || 0;
+                result.userContent = {
+                    emotionStatus: likeCountData.like.userDidEngage ? "LIKE" : "",
+                };
 
                 this.setState({
                     contentData: result,

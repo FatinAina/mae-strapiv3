@@ -40,6 +40,8 @@ import {
     BookmarkHomeContent,
     disLikeHomeContent,
     updatePromosSeenCount,
+    postLike,
+    getLike,
 } from "@services";
 import { FAArticleScreen } from "@services/analytics/analyticsArticles";
 
@@ -502,36 +504,62 @@ class ContentDetailsScreenTemplate extends React.Component {
         }
     };
 
-    _requestLikeContent = async () => {
+    _getLikeCount = async (contentId) => {
         try {
-            const {
-                item: { id },
-            } = this.state;
-
             const { getModel } = this.props;
-            const { cmsUrl, cmsCloudEnabled } = getModel("cloud");
-            const endpoint = cmsCloudEnabled ? cmsUrl : `${ENDPOINT_BASE}/user/v2/users`;
-
-            const response = await LikeHomeContent(endpoint, id.toString());
-            const result = response.data.result;
-            const updatedItem = this.state.item;
-            if (
-                updatedItem.userContent !== null &&
-                updatedItem.userContent.emotionStatus === "LIKE"
-            ) {
-                updatedItem.likeCount--;
-            } else {
-                updatedItem.likeCount++;
-            }
-            updatedItem.userContent.emotionStatus = result.emotionStatus;
-            this.setState({ item: updatedItem });
+            const userDetails = getModel("user");
+            const userId = userDetails?.m2uUserId;
+            const endpoint = `http://localhost:3001/v1/engagement`;
+            const query = `/${contentId}?userId=${userId}&engagementTypes=like`;
+            console.log("december", endpoint, query);
+            const data = await getLike(endpoint, query);
+            return data;
         } catch (error) {
-            ErrorLogger(error);
+            console.log("error retrieving engagement service");
+            throw error;
         }
-        if (this.props.isArticleMode) {
-            FAArticleScreen.onRequestLikeAricle(this.state.item.title);
-        } else {
-            this.props.logLikeButton(this.state.item.title);
+    };
+
+    _requestLikeContent = async () => {
+        const {
+            item: { id },
+        } = this.state;
+
+        const { getModel } = this.props;
+        const userDetails = getModel("user");
+        const { m2uUserId: userId } = userDetails || {};
+
+        if (userId) {
+            let endpoint = "http://localhost:3000/v1/engagement";
+
+            const updatedItem = this.state.item;
+            if (updatedItem.userContent.emotionStatus == "LIKE") {
+                methodType = "METHOD_DELETE";
+                endpoint += `/${id}?userId=${userId}&engagementType=like`;
+            } else {
+                methodType = "METHOD_POST";
+            }
+
+            try {
+                const response = await postLike(endpoint, userId, id, methodType);
+                const likeCountData = (await this._getLikeCount(id))?.data?.data?.userEngagements
+                    ?.like;
+
+                updatedItem.likeCount = likeCountData?.count || 0;
+                updatedItem.userContent = {
+                    emotionStatus: likeCountData?.userDidEngage ? "LIKE" : "",
+                };
+
+                this.setState({ item: updatedItem });
+            } catch (err) {
+                console.log("Like ERROR:", err);
+            }
+
+            if (this.props.isArticleMode) {
+                FAArticleScreen.onRequestLikeAricle(this.state.item.title);
+            } else {
+                this.props.logLikeButton(this.state.item.title);
+            }
         }
     };
 
