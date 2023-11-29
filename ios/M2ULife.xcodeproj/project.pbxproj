@@ -2437,6 +2437,10 @@
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/fico_fba_model.tflite",
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/unknown_embeddings.txt",
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/PublicKeyCert.plist",
+				"${PODS_ROOT}/zolozkit/zolozkit.framework/ZolozKit.bundle",
+				"${PODS_ROOT}/zolozkit/BioAuthEngine.framework/BioAuthEngine.bundle",
+				"${PODS_ROOT}/zolozkit/ToygerServiceAlgo.framework/ToygerService.bundle",
+				"${PODS_ROOT}/zolozkit/WebContainerLite.framework/WebContainerLite.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -2491,6 +2495,10 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fico_fba_model.tflite",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/unknown_embeddings.txt",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/PublicKeyCert.plist",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ZolozKit.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BioAuthEngine.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ToygerService.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WebContainerLite.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2777,6 +2785,10 @@
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/fico_fba_model.tflite",
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/unknown_embeddings.txt",
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/PublicKeyCert.plist",
+				"${PODS_ROOT}/zolozkit/zolozkit.framework/ZolozKit.bundle",
+				"${PODS_ROOT}/zolozkit/BioAuthEngine.framework/BioAuthEngine.bundle",
+				"${PODS_ROOT}/zolozkit/ToygerServiceAlgo.framework/ToygerService.bundle",
+				"${PODS_ROOT}/zolozkit/WebContainerLite.framework/WebContainerLite.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -2831,6 +2843,10 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fico_fba_model.tflite",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/unknown_embeddings.txt",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/PublicKeyCert.plist",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ZolozKit.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BioAuthEngine.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ToygerService.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WebContainerLite.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2966,6 +2982,10 @@
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/fico_fba_model.tflite",
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/unknown_embeddings.txt",
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/PublicKeyCert.plist",
+				"${PODS_ROOT}/zolozkit/zolozkit.framework/ZolozKit.bundle",
+				"${PODS_ROOT}/zolozkit/BioAuthEngine.framework/BioAuthEngine.bundle",
+				"${PODS_ROOT}/zolozkit/ToygerServiceAlgo.framework/ToygerService.bundle",
+				"${PODS_ROOT}/zolozkit/WebContainerLite.framework/WebContainerLite.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -3020,6 +3040,10 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fico_fba_model.tflite",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/unknown_embeddings.txt",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/PublicKeyCert.plist",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ZolozKit.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BioAuthEngine.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ToygerService.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WebContainerLite.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3195,6 +3219,10 @@
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/fico_fba_model.tflite",
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/unknown_embeddings.txt",
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/PublicKeyCert.plist",
+				"${PODS_ROOT}/zolozkit/zolozkit.framework/ZolozKit.bundle",
+				"${PODS_ROOT}/zolozkit/BioAuthEngine.framework/BioAuthEngine.bundle",
+				"${PODS_ROOT}/zolozkit/ToygerServiceAlgo.framework/ToygerService.bundle",
+				"${PODS_ROOT}/zolozkit/WebContainerLite.framework/WebContainerLite.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -3249,6 +3277,10 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fico_fba_model.tflite",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/unknown_embeddings.txt",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/PublicKeyCert.plist",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ZolozKit.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BioAuthEngine.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ToygerService.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WebContainerLite.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3384,6 +3416,10 @@
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/fico_fba_model.tflite",
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/unknown_embeddings.txt",
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/PublicKeyCert.plist",
+				"${PODS_ROOT}/zolozkit/zolozkit.framework/ZolozKit.bundle",
+				"${PODS_ROOT}/zolozkit/BioAuthEngine.framework/BioAuthEngine.bundle",
+				"${PODS_ROOT}/zolozkit/ToygerServiceAlgo.framework/ToygerService.bundle",
+				"${PODS_ROOT}/zolozkit/WebContainerLite.framework/WebContainerLite.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -3438,6 +3474,10 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fico_fba_model.tflite",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/unknown_embeddings.txt",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/PublicKeyCert.plist",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ZolozKit.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BioAuthEngine.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ToygerService.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WebContainerLite.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3502,6 +3542,10 @@
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/fico_fba_model.tflite",
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/unknown_embeddings.txt",
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/PublicKeyCert.plist",
+				"${PODS_ROOT}/zolozkit/zolozkit.framework/ZolozKit.bundle",
+				"${PODS_ROOT}/zolozkit/BioAuthEngine.framework/BioAuthEngine.bundle",
+				"${PODS_ROOT}/zolozkit/ToygerServiceAlgo.framework/ToygerService.bundle",
+				"${PODS_ROOT}/zolozkit/WebContainerLite.framework/WebContainerLite.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -3556,6 +3600,10 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fico_fba_model.tflite",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/unknown_embeddings.txt",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/PublicKeyCert.plist",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ZolozKit.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BioAuthEngine.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ToygerService.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WebContainerLite.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3642,6 +3690,10 @@
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/fico_fba_model.tflite",
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/unknown_embeddings.txt",
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/PublicKeyCert.plist",
+				"${PODS_ROOT}/zolozkit/zolozkit.framework/ZolozKit.bundle",
+				"${PODS_ROOT}/zolozkit/BioAuthEngine.framework/BioAuthEngine.bundle",
+				"${PODS_ROOT}/zolozkit/ToygerServiceAlgo.framework/ToygerService.bundle",
+				"${PODS_ROOT}/zolozkit/WebContainerLite.framework/WebContainerLite.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -3696,6 +3748,10 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fico_fba_model.tflite",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/unknown_embeddings.txt",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/PublicKeyCert.plist",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ZolozKit.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BioAuthEngine.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ToygerService.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WebContainerLite.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3895,6 +3951,10 @@
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/fico_fba_model.tflite",
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/unknown_embeddings.txt",
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/PublicKeyCert.plist",
+				"${PODS_ROOT}/zolozkit/zolozkit.framework/ZolozKit.bundle",
+				"${PODS_ROOT}/zolozkit/BioAuthEngine.framework/BioAuthEngine.bundle",
+				"${PODS_ROOT}/zolozkit/ToygerServiceAlgo.framework/ToygerService.bundle",
+				"${PODS_ROOT}/zolozkit/WebContainerLite.framework/WebContainerLite.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -3949,6 +4009,10 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fico_fba_model.tflite",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/unknown_embeddings.txt",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/PublicKeyCert.plist",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ZolozKit.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BioAuthEngine.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ToygerService.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WebContainerLite.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4027,6 +4091,10 @@
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/fico_fba_model.tflite",
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/unknown_embeddings.txt",
 				"${PODS_ROOT}/../../node_modules/react-native-ekyc/ios/Selfie/PublicKeyCert.plist",
+				"${PODS_ROOT}/zolozkit/zolozkit.framework/ZolozKit.bundle",
+				"${PODS_ROOT}/zolozkit/BioAuthEngine.framework/BioAuthEngine.bundle",
+				"${PODS_ROOT}/zolozkit/ToygerServiceAlgo.framework/ToygerService.bundle",
+				"${PODS_ROOT}/zolozkit/WebContainerLite.framework/WebContainerLite.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -4081,6 +4149,10 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fico_fba_model.tflite",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/unknown_embeddings.txt",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/PublicKeyCert.plist",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ZolozKit.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BioAuthEngine.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ToygerService.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WebContainerLite.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
